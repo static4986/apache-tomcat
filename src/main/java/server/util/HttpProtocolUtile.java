@@ -16,11 +16,12 @@ public class HttpProtocolUtile {
     /*
      * 请求失败返回请求头
      * */
-    public static String httpHead404(Integer contextLength){
+    public static String httpHead404(){
 
-        return "HTTP 1.1/ 404 NOT_FOUND /n"+
-                "Content-Type: text/html;charset=utf-8 /n"+
-                "Content-Length: "+contextLength+"/n"+
-                "/r/n";
+        String notFoundString = "<H1>404 NOT_FOUND </H1>";
+        return "HTTP/1.1 404 NOT FOUND \n"+
+                "Content-Type: text/html;charset=utf-8 \n"+
+                "Content-Length: "+notFoundString.getBytes().length+"\n"+
+                "\r\n"+ notFoundString;
     }
 }

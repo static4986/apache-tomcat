@@ -1,6 +1,7 @@
 package server.support;
 
 import server.pojo.HttpServlet;
+import server.pojo.Request;
 import server.support.map.MappedHost;
 import server.support.map.MappedWrapper;
 
@@ -27,19 +28,19 @@ public class MyConnector {
         this.mappedHost = mappedHost;
     }
 
-    public HttpServlet get(String url) {
+    public HttpServlet get(Request request) {
         //  http://localhost:8080/demo1/lagou
         //获取http://后面的部分
-        String lastUrl = url.split("//")[1];
+        String lastUrl = request.getUrl().split("//")[0];
         //获取localhost:8080
         String[] split = lastUrl.split("/");
-        String[] split1 = split[0].split(":");
-        String host = split1[0];
-        String port = split1[1];
+        //String[] split1 = split[0].split(":");
+        String host = request.getHost();
+        String port = request.getPort();
         //部署路径下的一个项目
         String context = split[1];
         //servlet映射路径
-        String servletMapping = lastUrl.substring(split[0].length()).substring(split[1].length());
+        String servletMapping = lastUrl.substring(split[0].length()+1).substring(split[1].length());
 
         for (int k = 0; k < mappedHost.size(); k++) {
             MappedHost h = mappedHost.get(k);

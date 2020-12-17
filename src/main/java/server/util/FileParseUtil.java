@@ -7,18 +7,21 @@ import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import server.Bootstrap;
 import server.pojo.HttpServlet;
+import server.support.TomcatClassLoader;
 import server.support.map.MappedContext;
 import server.support.map.MappedHost;
 import server.support.map.MappedWrapper;
 import server.support.map.Wrapper;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 public class FileParseUtil {
 
     public static void parseXmlFile(String basePath, String filePath, MappedContext mappedContext){
-        InputStream resource = Bootstrap.class.getClassLoader().getResourceAsStream(filePath);
+        URL resource1 = Thread.currentThread().getContextClassLoader().getResource("");
+        InputStream resource = Bootstrap.class.getClassLoader().getResourceAsStream(filePath.substring(resource1.getPath().length()+3,filePath.length()));
         SAXReader saxReader = new SAXReader();
         try {
             Document read = saxReader.read(resource);
@@ -40,7 +43,13 @@ public class FileParseUtil {
                 try {
                     //把url和servlet对象放入缓存
                     Wrapper wrapper = new Wrapper();
-                    wrapper.setMyServlet((HttpServlet) Class.forName(servletClass).newInstance());
+
+                    TomcatClassLoader classLoader = new TomcatClassLoader("demo1_war");
+                    HttpServlet servlet = (HttpServlet)classLoader.loadClass(servletClass).newInstance();
+                    wrapper.setMyServlet(servlet);
+                    if(mappedContext.getMapperWrapper() == null){
+                        mappedContext.setMapperWrapper(new MappedWrapper[8]);
+                    }
                     mappedContext.getMapperWrapper()[i] = new MappedWrapper(urlPattern,wrapper);
                 } catch (Exception e) {
                     e.printStackTrace();

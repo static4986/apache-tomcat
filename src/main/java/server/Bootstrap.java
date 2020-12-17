@@ -80,6 +80,10 @@ public class Bootstrap {
                     for (int i = 0; i < files.length; i++) {
                         File context = files[i];
                         String contextName = context.getName();
+                        if(null == host.getContextLists()){
+                            host.setContextLists(new ContextList());
+                            host.getContextLists().setMappedContext(new MappedContext[3]);
+                        }
                         host.getContextLists().getMappedContext()[i]=new MappedContext(contextName,new Context());
 
                         //找到项目中的web.xml文件
@@ -298,7 +302,8 @@ public class Bootstrap {
         Bootstrap bootstrap = new Bootstrap();
         //bootstrap.start();
         //bootstrap.start2();
-        bootstrap.start3_1();
+        //bootstrap.start3_1();
+        bootstrap.start4();
     }
 
 }
